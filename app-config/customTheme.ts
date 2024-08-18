@@ -56,8 +56,8 @@ const customTheme = createTheme({
     values: {
       mobile: 0,
       tablet: 640,
-      laptop: 1024,
-      desktop: 1200,
+      laptop: 1080,
+      desktop: 1920,
     },
   },
   typography: {
