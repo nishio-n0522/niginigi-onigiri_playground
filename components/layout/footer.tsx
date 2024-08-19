@@ -1,6 +1,5 @@
 import React from "react";
-import { Typography, Stack, Divider } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { Typography, Stack } from "@mui/material";
 import { FooterHeight } from "./layout-config";
 
 const Footer: React.FC = () => {
@@ -14,7 +13,9 @@ const Footer: React.FC = () => {
       sx={{
         width: "100vw",
         height: FooterHeight,
-        // py: 1,
+        p: 0,
+        m: 0,
+        boxSizing: "border-box",
       }}
     >
       <Typography

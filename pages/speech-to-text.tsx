@@ -1,10 +1,9 @@
-import { FooterHeight, HeaderHeight } from "@/components/layout/layout-config";
 import ExperimentalResultView from "@/components/speechToText/experimentalResultView";
 import LaptopUpDrawer from "@/components/speechToText/laptopUpDrawer";
 import TabletDownDrawer from "@/components/speechToText/tabletDownDrawer";
 import { useResponsive } from "@/hooks/use-responsive";
-import { Box, Button, Drawer, Stack, Typography } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { Add } from "@mui/icons-material";
+import { Fab, Stack } from "@mui/material";
 import { useState } from "react";
 
 function SpeechToText() {
@@ -19,9 +18,25 @@ function SpeechToText() {
       sx={{
         width: "100vw",
         height: "100%",
+        p: 0,
+        m: 0,
+        boxSizing: "border-box",
       }}
     >
       <ExperimentalResultView />
+      {!laptopUp && (
+        <Fab
+          color="secondary"
+          onClick={() => setOpenDrawer(true)}
+          sx={{
+            position: "absolute",
+            bottom: 30,
+            right: 30,
+          }}
+        >
+          <Add />
+        </Fab>
+      )}
       {laptopUp ? (
         <LaptopUpDrawer />
       ) : (
