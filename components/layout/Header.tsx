@@ -41,12 +41,14 @@ export function Header(props: HeaderProps) {
   return (
     <AppBar
       position="static"
+      elevation={0}
       sx={{
         width: "100vw",
         p: 0,
         m: 0,
         height: HeaderHeight,
         zIndex: (theme) => theme.zIndex.drawer + 1,
+        boxSizing: "border-box",
       }}
     >
       <Toolbar>

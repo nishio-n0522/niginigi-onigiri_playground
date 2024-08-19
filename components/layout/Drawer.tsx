@@ -12,7 +12,6 @@ import { Toolbar } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { pageConfig } from "../../pages-config/PageConfig";
 import { useRouter } from "next/navigation";
-import { useResponsive } from "../../hooks/use-responsive";
 
 interface TemporaryDrawerProps {
   openDrawer: boolean;

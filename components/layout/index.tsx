@@ -3,7 +3,6 @@ import { Header } from "./Header";
 import Footer from "./footer";
 import { Stack } from "@mui/material";
 
-import { useResponsive } from "../../hooks/use-responsive";
 import TemporaryDrawer from "./Drawer";
 import { FooterHeight, HeaderHeight } from "./layout-config";
 
@@ -21,8 +20,6 @@ export function Layout(props: LayoutProps) {
     <Stack
       direction="column"
       justifyContent="flex-start"
-      alignItems="center"
-      spacing={2}
       bgcolor="#111111"
       sx={{
         minHeight: "100vh",
@@ -35,10 +32,14 @@ export function Layout(props: LayoutProps) {
     >
       <Header setOpenDrawer={setOpenDrawer} />
       <Stack
+        direction="row"
         sx={{
           flexGrow: 1,
           width: "100vw",
           height: `calc(100vh - ${HeaderHeight}px - ${FooterHeight}px)`,
+          p: 0,
+          m: 0,
+          boxSizing: "border-box",
         }}
       >
         {
