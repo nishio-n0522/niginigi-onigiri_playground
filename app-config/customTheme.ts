@@ -46,10 +46,10 @@ const customTheme = createTheme({
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#E91E63",
-      light: "#F8BBD0",
-      dark: "#C2185B",
-      contrastText: "#FFFFFF",
+      main: "#CDDC39",
+      light: "#F0F4C3",
+      dark: "#AFB42B",
+      contrastText: "#212121",
     },
   },
   breakpoints: {

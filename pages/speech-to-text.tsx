@@ -30,21 +30,21 @@ function SpeechToText() {
           onClick={() => setOpenDrawer(true)}
           sx={{
             position: "absolute",
-            bottom: 30,
+            bottom: 55,
             right: 30,
           }}
         >
           <Add />
         </Fab>
       )}
-      {laptopUp ? (
-        <LaptopUpDrawer />
+      <LaptopUpDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+      {/* {laptopUp ? (
       ) : (
         <TabletDownDrawer
           openDrawer={openDrawer}
           setOpenDrawer={setOpenDrawer}
         />
-      )}
+      )} */}
       {/* {laptopUp && <Box sx={{ width: 250, bgcolor: "blue" }}>drawer place</Box>} */}
       {/* <Box sx={{ width: "100vw", bgcolor: "red" }}>
       </Box> */}
