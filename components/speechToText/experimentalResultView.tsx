@@ -15,12 +15,15 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function ExperimentalResultView() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{ flexGrow: 1, height: "98%", overflow: "hidden", overflowY: "auto" }}
+    >
       <Grid
         container
         columns={12}
         spacing={{ mobile: 2, laptop: 3 }}
         p={{ mobile: 2, desktop: 3 }}
+        // sx={{ overflow: "auto" }}
       >
         {Array.from(Array(6)).map((_, index) => (
           <Grid mobile={12} tablet={6} laptop={3} desktop={2} key={index}>

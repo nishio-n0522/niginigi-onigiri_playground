@@ -11,8 +11,10 @@ interface LayoutProps {
 }
 
 export function Layout(props: LayoutProps) {
-  const laptopUp = useResponsive("up", "laptop");
-  const [openDrawer, setOpenDrawer] = useState(laptopUp);
+  // const laptopUp = useResponsive("up", "laptop");  // あとで調整する
+  // const [openDrawer, setOpenDrawer] = useState(laptopUp);  // あとで調整する
+
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   return (
     <Stack

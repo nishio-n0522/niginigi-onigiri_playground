@@ -1,3 +1,4 @@
+import { FooterHeight, HeaderHeight } from "@/components/layout/layout-config";
 import ExperimentalResultView from "@/components/speechToText/experimentalResultView";
 import LaptopUpDrawer from "@/components/speechToText/laptopUpDrawer";
 import TabletDownDrawer from "@/components/speechToText/tabletDownDrawer";
@@ -15,7 +16,10 @@ function SpeechToText() {
       direction="row"
       justifyContent="flex-start"
       alignItems="center"
-      sx={{ width: "100vw" }}
+      sx={{
+        width: "100vw",
+        height: `calc(100vh - ${HeaderHeight}px - ${FooterHeight}px)`,
+      }}
     >
       <ExperimentalResultView />
       {laptopUp ? (
