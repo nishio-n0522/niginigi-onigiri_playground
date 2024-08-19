@@ -15,8 +15,8 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useResponsive } from "@/hooks/use-responsive";
 
-const laptopDrawerWidth = 250;
-const desktopDrawerWidth = 350;
+const laptopDrawerWidth = 300;
+const desktopDrawerWidth = 400;
 
 export default function LaptopUpDrawer() {
   const desktopUp = useResponsive("up", "desktop");
