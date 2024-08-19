@@ -12,7 +12,7 @@ import { MenuItem } from "@mui/material";
 import { Menu as MenuIcon, AccountCircle } from "@mui/icons-material";
 import { signOut } from "aws-amplify/auth";
 import { useRouter } from "next/navigation";
-import { useResponsive } from "@/hooks/use-responsive";
+import { HeaderHeight } from "./layout-config";
 
 interface HeaderProps {
   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,7 +21,6 @@ interface HeaderProps {
 
 export function Header(props: HeaderProps) {
   const router = useRouter();
-  const laptopDown = useResponsive("down", "laptop");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -31,7 +30,8 @@ export function Header(props: HeaderProps) {
   const handleClickLink = (href: string) => {
     router.push(href);
     handleClose();
-    if (laptopDown) props.setOpenDrawer(false);
+
+    props.setOpenDrawer(false);
   };
 
   const handleClose = () => {
@@ -45,10 +45,7 @@ export function Header(props: HeaderProps) {
         width: "100vw",
         p: 0,
         m: 0,
-        height: {
-          mobile: 56,
-          laptop: 56,
-        },
+        height: HeaderHeight,
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >

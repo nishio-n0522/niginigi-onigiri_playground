@@ -1,6 +1,7 @@
 import React from "react";
 import { Typography, Stack, Divider } from "@mui/material";
 import { grey } from "@mui/material/colors";
+import { FooterHeight } from "./layout-config";
 
 const Footer: React.FC = () => {
   return (
@@ -12,14 +13,10 @@ const Footer: React.FC = () => {
       spacing={2}
       sx={{
         width: "100vw",
+        height: FooterHeight,
         py: 1,
       }}
     >
-      <Divider
-        textAlign="center"
-        variant="fullWidth"
-        sx={{ color: grey[300] }}
-      />
       <Typography
         variant="caption"
         fontFamily="__Concert_One_252401"

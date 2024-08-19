@@ -21,12 +21,14 @@ interface TemporaryDrawerProps {
 }
 
 export default function TemporaryDrawer(props: TemporaryDrawerProps) {
-  const laptopUp = useResponsive("up", "laptop");
+  // const laptopUp = useResponsive("up", "laptop");  //  あとで調整
   const router = useRouter();
 
   const handleClickLink = (href: string) => {
     router.push(href);
-    if (!laptopUp) props.setOpenDrawer(false);
+
+    props.setOpenDrawer(false); // あとで調整
+    // if (!laptopUp) props.setOpenDrawer(false);  // あとで調整
   };
 
   const DrawerList = (
@@ -55,7 +57,8 @@ export default function TemporaryDrawer(props: TemporaryDrawerProps) {
 
   return (
     <Drawer
-      variant={laptopUp ? "persistent" : "temporary"}
+      variant="temporary"
+      // variant={laptopUp ? "persistent" : "temporary"}  // あとで調整
       open={props.openDrawer}
       onClose={() => props.setOpenDrawer(false)}
       sx={{ flexShrink: 0 }}
