@@ -2,6 +2,8 @@ import * as React from "react";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { Button, Stack, TextField } from "@mui/material";
 import { grey } from "@mui/material/colors";
+import { FileUpload } from "@mui/icons-material";
+import FileUploadButton from "./fileUploadButton";
 
 const anchorPlace = "bottom";
 
@@ -48,6 +50,7 @@ export default function TabletDownDrawer(props: Props) {
           variant="outlined"
           sx={{ width: "80%" }}
         />
+        <FileUploadButton />
         <Button variant="contained" color="primary" sx={{ width: "80%" }}>
           execute
         </Button>

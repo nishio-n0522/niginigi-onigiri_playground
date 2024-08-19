@@ -29,7 +29,7 @@ function UserProfile() {
         >
           User profile
         </Typography>
-        <Box sx={{ width: "90px", osition: "relative" }}>
+        <Box sx={{ width: "80px", osition: "relative" }}>
           <Image
             alt="rabbit.png"
             src={constractorRabbitImg}
