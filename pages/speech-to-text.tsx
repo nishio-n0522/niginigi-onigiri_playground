@@ -18,7 +18,7 @@ function SpeechToText() {
       alignItems="center"
       sx={{
         width: "100vw",
-        height: `calc(100vh - ${HeaderHeight}px - ${FooterHeight}px)`,
+        height: "100%",
       }}
     >
       <ExperimentalResultView />

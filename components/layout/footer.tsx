@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
       sx={{
         width: "100vw",
         height: FooterHeight,
-        py: 1,
+        // py: 1,
       }}
     >
       <Typography
