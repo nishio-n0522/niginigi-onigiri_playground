@@ -16,7 +16,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function ExperimentalResultView() {
   return (
     <Box
-      sx={{ flexGrow: 1, height: "98%", overflow: "hidden", overflowY: "auto" }}
+      sx={{ flexGrow: 1, height: "95%", overflow: "hidden", overflowY: "auto" }}
     >
       <Grid
         container

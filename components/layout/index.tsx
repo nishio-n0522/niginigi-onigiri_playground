@@ -5,6 +5,7 @@ import { Stack } from "@mui/material";
 
 import { useResponsive } from "../../hooks/use-responsive";
 import TemporaryDrawer from "./Drawer";
+import { FooterHeight, HeaderHeight } from "./layout-config";
 
 interface LayoutProps {
   children: ReactNode;
@@ -25,7 +26,7 @@ export function Layout(props: LayoutProps) {
       bgcolor="#111111"
       sx={{
         minHeight: "100vh",
-        height: { laptop: "100vh" },
+        height: "100vh",
         width: "100vw",
         boxSizing: "border-box",
         p: 0,
@@ -33,7 +34,13 @@ export function Layout(props: LayoutProps) {
       }}
     >
       <Header setOpenDrawer={setOpenDrawer} />
-      <Stack sx={{ flexGrow: 1 }}>
+      <Stack
+        sx={{
+          flexGrow: 1,
+          width: "100vw",
+          height: `calc(100vh - ${HeaderHeight}px - ${FooterHeight}px)`,
+        }}
+      >
         {
           <TemporaryDrawer
             openDrawer={openDrawer}
