@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -6,11 +6,12 @@ import {
   IconButton,
   Menu,
   Box,
+  Avatar,
 } from "@mui/material";
 import { MenuItem } from "@mui/material";
 
 import { Menu as MenuIcon, AccountCircle } from "@mui/icons-material";
-import { signOut } from "aws-amplify/auth";
+import { fetchUserAttributes, signOut } from "aws-amplify/auth";
 import { useRouter } from "next/navigation";
 import { HeaderHeight } from "./layout-config";
 
@@ -22,6 +23,14 @@ interface HeaderProps {
 export function Header(props: HeaderProps) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [nickname, setNickname] = useState<undefined | null | string>(null);
+
+  useEffect(() => {
+    if (!!nickname) return;
+    fetchUserAttributes()
+      .then((res) => setNickname(res.nickname))
+      .catch((err) => console.log("err"));
+  }, [nickname]);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -37,6 +46,8 @@ export function Header(props: HeaderProps) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  console.log("nickname", nickname);
 
   return (
     <AppBar
@@ -89,7 +100,13 @@ export function Header(props: HeaderProps) {
             onClick={handleMenu}
             color="inherit"
           >
-            <AccountCircle />
+            {!nickname ? (
+              <AccountCircle />
+            ) : (
+              <Avatar sx={{ width: "32px", height: "32px", fontSize: "18px" }}>
+                {nickname[0]}
+              </Avatar>
+            )}
           </IconButton>
           <Menu
             id="menu-appbar"

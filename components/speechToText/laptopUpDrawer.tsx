@@ -5,9 +5,7 @@ import { useResponsive } from "@/hooks/use-responsive";
 import { grey } from "@mui/material/colors";
 import { Button, Stack, TextField } from "@mui/material";
 import FileUploadButton from "./fileUploadButton";
-
-const laptopDrawerWidth = 300;
-const desktopDrawerWidth = 400;
+import { desktopDrawerWidth, laptopDrawerWidth } from "./speechToText-config";
 
 interface Props {
   openDrawer: boolean;
