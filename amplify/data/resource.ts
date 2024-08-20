@@ -1,4 +1,5 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { experimental } from "aws-cdk-lib/aws-cloudfront";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -11,7 +12,15 @@ const schema = a.schema({
     .model({
       content: a.string(),
     })
-    .authorization((allow) => [allow.publicApiKey()]),
+    .authorization((allow) => [allow.owner()]),
+  ExperimentalData: a
+    .model({
+      experimentName: a.string().required(),
+      experimentOrderData: a.datetime().required(),
+      experimentCompletedDate: a.datetime(),
+      experimentResult: a.json().array(),
+    })
+    .authorization((allow) => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -19,11 +28,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "apiKey",
-    // API Key is used for a.allow.public() rules
-    apiKeyAuthorizationMode: {
-      expiresInDays: 30,
-    },
+    defaultAuthorizationMode: "userPool",
   },
 });
 
