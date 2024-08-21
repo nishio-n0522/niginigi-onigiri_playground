@@ -41,7 +41,19 @@ export default function ExperimentControlDrawer(
   const handleInputExperimentName = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("nanikore", event.target.value);
+    const tempExperimentName = event.target.value;
+    setExperimentName(tempExperimentName);
+  };
+
+  const execSpeechToTextExperiment = async () => {
+    try {
+      await client.models.ExperimentalData.create({
+        experimentName: experimentName,
+        experimentOrderData: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -111,6 +123,7 @@ export default function ExperimentControlDrawer(
           color="primary"
           disabled={!confirm}
           sx={{ width: "80%" }}
+          onClick={execSpeechToTextExperiment}
         >
           execute
         </Button>
