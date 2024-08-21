@@ -5,6 +5,7 @@ import { Stack } from "@mui/material";
 
 import TemporaryDrawer from "./Drawer";
 import { FooterHeight, HeaderHeight } from "./layout-config";
+import { AuthUser, fetchUserAttributes } from "aws-amplify/auth";
 
 interface LayoutProps {
   children: ReactNode;

@@ -10,6 +10,9 @@ body {
   padding: 0;
   height: 100vh;
   width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
   box-sizing: border-box;
 }
