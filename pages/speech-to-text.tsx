@@ -1,6 +1,5 @@
 import ExperimentalResultView from "@/components/speechToText/experimentalResultView";
-import LaptopUpDrawer from "@/components/speechToText/laptopUpDrawer";
-import TabletDownDrawer from "@/components/speechToText/tabletDownDrawer";
+import ExperimentControlDrawer from "@/components/speechToText/experimentControlDrawer";
 import { useResponsive } from "@/hooks/use-responsive";
 import { Add } from "@mui/icons-material";
 import { Fab, Stack } from "@mui/material";
@@ -37,17 +36,10 @@ function SpeechToText() {
           <Add />
         </Fab>
       )}
-      <LaptopUpDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
-      {/* {laptopUp ? (
-      ) : (
-        <TabletDownDrawer
-          openDrawer={openDrawer}
-          setOpenDrawer={setOpenDrawer}
-        />
-      )} */}
-      {/* {laptopUp && <Box sx={{ width: 250, bgcolor: "blue" }}>drawer place</Box>} */}
-      {/* <Box sx={{ width: "100vw", bgcolor: "red" }}>
-      </Box> */}
+      <ExperimentControlDrawer
+        openDrawer={openDrawer}
+        setOpenDrawer={setOpenDrawer}
+      />
     </Stack>
   );
 }

@@ -1,3 +1,5 @@
+import type { Schema } from "../../amplify/data/resource";
+import { generateClient } from "aws-amplify/api";
 import * as React from "react";
 import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,17 +14,20 @@ import {
   Stack,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
 import FileUploadButton from "./fileUploadButton";
 import { desktopDrawerWidth, laptopDrawerWidth } from "./speechToText-config";
 
-interface Props {
+interface ExperimentControlDrawerProps {
   openDrawer: boolean;
   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function LaptopUpDrawer(props: Props) {
+const client = generateClient<Schema>();
+
+export default function ExperimentControlDrawer(
+  props: ExperimentControlDrawerProps
+) {
   const { openDrawer, setOpenDrawer } = props;
 
   const [confirm, setConfirm] = React.useState<boolean>(false);
@@ -32,21 +37,6 @@ export default function LaptopUpDrawer(props: Props) {
   const [experimentName, setExperimentName] = React.useState<string>(
     "input experiment name"
   );
-
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (laptopUp) return;
-      // if (
-      //   event &&
-      //   event.type === "keydown" &&
-      //   ((event as React.KeyboardEvent).key === "Tab" ||
-      //     (event as React.KeyboardEvent).key === "Shift")
-      // ) {
-      //   return;
-      // }
-
-      setOpenDrawer(open);
-    };
 
   const handleInputExperimentName = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -59,7 +49,9 @@ export default function LaptopUpDrawer(props: Props) {
       variant={laptopUp ? "permanent" : "temporary"}
       anchor={laptopUp ? "right" : "bottom"}
       open={openDrawer}
-      onClose={toggleDrawer(false)}
+      onClose={() => {
+        if (!laptopUp) setOpenDrawer(false);
+      }}
       sx={{
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {
@@ -117,8 +109,8 @@ export default function LaptopUpDrawer(props: Props) {
         <Button
           variant="contained"
           color="primary"
-          sx={{ width: "80%" }}
           disabled={!confirm}
+          sx={{ width: "80%" }}
         >
           execute
         </Button>
