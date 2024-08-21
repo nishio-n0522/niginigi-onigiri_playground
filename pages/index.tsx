@@ -3,7 +3,7 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import Image from "next/image";
 
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 
 import homeRabbitImg from "@/public/onigiriRabbitImg.png";
 import { grey } from "@mui/material/colors";

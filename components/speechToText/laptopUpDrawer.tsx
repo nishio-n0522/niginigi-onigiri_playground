@@ -3,7 +3,17 @@ import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
 import { useResponsive } from "@/hooks/use-responsive";
 import { grey } from "@mui/material/colors";
-import { Button, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import FileUploadButton from "./fileUploadButton";
 import { desktopDrawerWidth, laptopDrawerWidth } from "./speechToText-config";
 
@@ -14,6 +24,8 @@ interface Props {
 
 export default function LaptopUpDrawer(props: Props) {
   const { openDrawer, setOpenDrawer } = props;
+
+  const [confirm, setConfirm] = React.useState<boolean>(false);
 
   const laptopUp = useResponsive("up", "laptop");
   const desktopUp = useResponsive("up", "desktop");
@@ -61,7 +73,7 @@ export default function LaptopUpDrawer(props: Props) {
         },
       }}
     >
-      <Toolbar />
+      {laptopUp && <Toolbar />}
       <Stack
         direction="column"
         justifyContent="flex-start"
@@ -70,6 +82,9 @@ export default function LaptopUpDrawer(props: Props) {
         py={3}
         sx={{ overflow: "auto" }}
       >
+        <Typography variant="h6" sx={{ width: "80%" }}>
+          Test speech to text
+        </Typography>
         <TextField
           id="outlined-basic"
           label="Experiment name"
@@ -79,7 +94,32 @@ export default function LaptopUpDrawer(props: Props) {
           sx={{ width: "80%" }}
         />
         <FileUploadButton />
-        <Button variant="contained" color="primary" sx={{ width: "80%" }}>
+        <Divider sx={{ width: "80%" }} />
+        <Box sx={{ width: "80%" }}>
+          <Typography variant="body2">
+            機密情報が含まれるデータは絶対に入力しないでください
+          </Typography>
+          <FormControlLabel
+            required
+            control={
+              <Checkbox
+                onChange={(event) => setConfirm(event.target.checked)}
+              />
+            }
+            label="確認しました"
+            disableTypography={true}
+            sx={{
+              typography: (theme) => theme.typography.body2,
+              verticalAlign: "bottom",
+            }}
+          />
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: "80%" }}
+          disabled={!confirm}
+        >
           execute
         </Button>
       </Stack>
