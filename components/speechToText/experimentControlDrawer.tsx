@@ -111,7 +111,6 @@ export default function ExperimentControlDrawer(
           color="primary"
           disabled={!confirm}
           sx={{ width: "80%" }}
-          onClick={execSpeechToTextExperiment}
         >
           execute
         </Button>
