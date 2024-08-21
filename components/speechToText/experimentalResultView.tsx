@@ -16,7 +16,7 @@ export default function ExperimentalResultView() {
           : laptopUp
           ? `calc(100% - ${laptopDrawerWidth}px)`
           : "100%",
-        height: "95%",
+        height: "98%",
         overflow: "hidden",
         overflowY: "auto",
         m: 0,
