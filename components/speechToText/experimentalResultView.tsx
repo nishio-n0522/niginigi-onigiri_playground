@@ -27,7 +27,6 @@ export default function ExperimentalResultView() {
         columns={12}
         spacing={{ mobile: 2, laptop: 3 }}
         p={{ mobile: 2, desktop: 3 }}
-        // sx={{ overflow: "auto" }}
       >
         {Array.from(Array(20)).map((_, index) => (
           <Grid
