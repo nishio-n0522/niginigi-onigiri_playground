@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Box, Stack, Typography } from "@mui/material";
 
 import constractorRabbitImg from "@/public/constractorRabbitImg.png";
+import { fetchUserAttributes } from "aws-amplify/auth";
 
 function UserProfile() {
   return (
