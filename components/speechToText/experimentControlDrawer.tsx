@@ -1,6 +1,6 @@
+import * as React from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/api";
-import * as React from "react";
 import Drawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
 import { useResponsive } from "@/hooks/use-responsive";
@@ -12,18 +12,35 @@ import {
   Divider,
   FormControlLabel,
   Stack,
+  styled,
   TextField,
   Typography,
 } from "@mui/material";
-import FileUploadButton from "./fileUploadButton";
 import { desktopDrawerWidth, laptopDrawerWidth } from "./speechToText-config";
+import dayjs from "dayjs";
+import { getCurrentUser } from "aws-amplify/auth";
+import { CloudUpload } from "@mui/icons-material";
+import { StorageManager } from "@aws-amplify/ui-react-storage";
+import { uploadData } from "aws-amplify/storage";
 
 interface ExperimentControlDrawerProps {
   openDrawer: boolean;
   setOpenDrawer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const client = generateClient<Schema>();
+const client = generateClient<Schema>({ authMode: "userPool" });
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 export default function ExperimentControlDrawer(
   props: ExperimentControlDrawerProps
@@ -31,18 +48,78 @@ export default function ExperimentControlDrawer(
   const { openDrawer, setOpenDrawer } = props;
 
   const [confirm, setConfirm] = React.useState<boolean>(false);
-
   const laptopUp = useResponsive("up", "laptop");
   const desktopUp = useResponsive("up", "desktop");
-  const [experimentName, setExperimentName] = React.useState<string>(
-    "input experiment name"
-  );
+  const [experimentName, setExperimentName] = React.useState<string>("");
+  const [uploadFile, setUploadFile] = React.useState<File | null>(null);
+  const [disableExecButton, setDisableExecButton] =
+    React.useState<boolean>(true);
+
+  const handleUploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    console.log(event.target.files);
+    if (file) setUploadFile(file);
+  };
 
   const handleInputExperimentName = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("nanikore", event.target.value);
+    const tempExperimentName = event.target.value;
+    setExperimentName(tempExperimentName);
   };
+
+  const execSpeechToTextExperiment = async () => {
+    if (!uploadFile) return;
+
+    const fileExtension = uploadFile.name.split(".").pop();
+    const s3FileName = self.crypto.randomUUID() + "." + fileExtension;
+
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(uploadFile);
+
+    fileReader.onload = async (event) => {
+      if (!event.target || !event.target.result) return;
+      try {
+        await uploadData({
+          data: event.target.result,
+          path: ({ identityId }) =>
+            `speech-to-text/${identityId}/${s3FileName}`,
+        });
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+
+    const { userId } = await getCurrentUser();
+    try {
+      await client.models.ExperimentalData.create({
+        owner: userId,
+        experimentName: experimentName,
+        experimentOrderDate: dayjs().format("YYYY/MM/DD HH:mm.ss"),
+        s3FileName: s3FileName,
+        audioFileName: uploadFile.name,
+        status: "Pending",
+      });
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  // Drawerの開閉でフォームデータをリセット
+  React.useEffect(() => {
+    if (!!laptopUp) return;
+    setExperimentName("");
+    setUploadFile(null);
+    setConfirm(false);
+  }, [openDrawer]);
+
+  // D
+  React.useEffect(() => {
+    if (!experimentName) return setDisableExecButton(true);
+    if (!uploadFile) return setDisableExecButton(true);
+    if (!confirm) return setDisableExecButton(true);
+    setDisableExecButton(false);
+  }, [experimentName, uploadFile, confirm]);
 
   return (
     <Drawer
@@ -75,7 +152,7 @@ export default function ExperimentControlDrawer(
         sx={{ overflow: "auto" }}
       >
         <Typography variant="h6" sx={{ width: "80%" }}>
-          Test speech to text
+          Start speech to text
         </Typography>
         <TextField
           id="outlined-basic"
@@ -85,7 +162,31 @@ export default function ExperimentControlDrawer(
           onChange={handleInputExperimentName}
           sx={{ width: "80%" }}
         />
-        <FileUploadButton />
+        <Stack
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ width: "100%" }}
+        >
+          <Button
+            component="label"
+            role={undefined}
+            variant="outlined"
+            tabIndex={-1}
+            startIcon={<CloudUpload />}
+            sx={{ width: "80%", mb: 0.5 }}
+          >
+            Upload audio file
+            <VisuallyHiddenInput
+              accept="audio/*"
+              type="file"
+              onChange={handleUploadFile}
+            />
+          </Button>
+          <Typography variant="body2" sx={{ width: "80%" }}>
+            File: {!!uploadFile && uploadFile.name}
+          </Typography>
+        </Stack>
         <Divider sx={{ width: "80%" }} />
         <Box sx={{ width: "80%" }}>
           <Typography variant="body2">
@@ -109,8 +210,9 @@ export default function ExperimentControlDrawer(
         <Button
           variant="contained"
           color="primary"
-          disabled={!confirm}
+          disabled={disableExecButton}
           sx={{ width: "80%" }}
+          onClick={execSpeechToTextExperiment}
         >
           execute
         </Button>

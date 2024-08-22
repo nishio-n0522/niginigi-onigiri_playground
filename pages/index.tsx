@@ -1,36 +1,13 @@
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
 import Image from "next/image";
 
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 import homeRabbitImg from "@/public/onigiriRabbitImg.png";
 import { grey } from "@mui/material/colors";
 
 import "@aws-amplify/ui-react/styles.css";
 
-// const client = generateClient<Schema>();
-
 export default function App() {
-  // const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  // function listTodos() {
-  //   client.models.Todo.observeQuery().subscribe({
-  //     next: (data) => setTodos([...data.items]),
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   listTodos();
-  // }, []);
-
-  // function createTodo() {
-  //   client.models.Todo.create({
-  //     content: window.prompt("Todo content"),
-  //   });
-  // }
-
   return (
     <Stack
       direction="column"
