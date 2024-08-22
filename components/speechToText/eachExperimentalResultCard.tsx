@@ -4,82 +4,94 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { grey, red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { grey } from "@mui/material/colors";
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+import { Schema } from "@/amplify/data/resource";
+import {
+  AudioFile,
+  CheckCircle,
+  Delete,
+  Download,
+  Loop,
+  Pending,
+  ReadMore,
+  Science,
+} from "@mui/icons-material";
+import { Box, Chip, Stack } from "@mui/material";
+
+interface EachExperimentalDataCardProps {
+  eachExperimentData: Schema["ExperimentalData"]["type"];
 }
 
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
-export default function EachExperimentalResultCard() {
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
+export default function EachExperimentalDataCard({
+  eachExperimentData,
+}: EachExperimentalDataCardProps) {
   return (
     <Card sx={{ width: "100%", bgcolor: grey[100] }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
+          <Avatar sx={{ bgcolor: grey[800] }}>
+            <Science />
           </Avatar>
         }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={eachExperimentData.experimentName}
+        subheader={eachExperimentData.audioFileName}
+        titleTypographyProps={{ variant: "h6" }}
       />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+      <CardContent sx={{ ml: 1, py: 0 }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ textAlign: "middle", mb: 0.5 }}
+        >
+          {"Order: "}
+          {eachExperimentData.experimentOrderDate}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ textAlign: "middle", mb: 0.5 }}
+        >
+          {"Completed: "}
+          {eachExperimentData.experimentCompletedDate}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+          <ReadMore />
         </IconButton>
         <IconButton aria-label="share">
-          <ShareIcon />
+          <Download />
         </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
+        <IconButton aria-label="delete">
+          <Delete />
+        </IconButton>
+        <Chip
+          label={eachExperimentData.status}
+          variant="outlined"
+          icon={
+            eachExperimentData.status === "Pending" ? (
+              <Pending />
+            ) : eachExperimentData.status === "Processing" ? (
+              <Loop />
+            ) : (
+              <CheckCircle />
+            )
+          }
+          color={
+            eachExperimentData.status === "Pending"
+              ? "primary"
+              : eachExperimentData.status === "Processing"
+              ? "info"
+              : "success"
+          }
+          size="small"
+          sx={{ ml: "auto" }}
+        />
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Method:</Typography>
-        </CardContent>
-      </Collapse>
     </Card>
   );
 }
