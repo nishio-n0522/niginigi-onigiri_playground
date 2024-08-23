@@ -70,10 +70,10 @@ export default function ExperimentControlDrawer(
 
   const execSpeechToTextExperiment = async () => {
     if (!uploadFile) return;
+    const { userId } = await getCurrentUser();
 
     const fileExtension = uploadFile.name.split(".").pop();
     const s3FileName = self.crypto.randomUUID() + "." + fileExtension;
-
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(uploadFile);
 
@@ -87,22 +87,21 @@ export default function ExperimentControlDrawer(
         });
       } catch (err) {
         console.warn(err);
+        return;
+      }
+      try {
+        await client.models.ExperimentalData.create({
+          owner: userId,
+          experimentName: experimentName,
+          experimentOrderDate: dayjs().format("YYYY/MM/DD HH:mm.ss"),
+          s3FileName: s3FileName,
+          audioFileName: uploadFile.name,
+          status: "Pending",
+        });
+      } catch (err) {
+        console.warn(err);
       }
     };
-
-    const { userId } = await getCurrentUser();
-    try {
-      await client.models.ExperimentalData.create({
-        owner: userId,
-        experimentName: experimentName,
-        experimentOrderDate: dayjs().format("YYYY/MM/DD HH:mm.ss"),
-        s3FileName: s3FileName,
-        audioFileName: uploadFile.name,
-        status: "Pending",
-      });
-    } catch (err) {
-      console.warn(err);
-    }
   };
 
   // Drawerの開閉でフォームデータをリセット
@@ -113,7 +112,7 @@ export default function ExperimentControlDrawer(
     setConfirm(false);
   }, [openDrawer]);
 
-  // D
+  // Executeボタンの有効化チェック
   React.useEffect(() => {
     if (!experimentName) return setDisableExecButton(true);
     if (!uploadFile) return setDisableExecButton(true);
