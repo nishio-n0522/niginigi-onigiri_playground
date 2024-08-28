@@ -28,6 +28,24 @@ Resources:
             Method: get
       Layers:
         - !Ref DependenciesLayer
+
+  GoodbyeWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/goodbye_world/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        GoodbyeWorld:
+          Type: Api
+          Properties:
+            Path: /goodbye
+            Method: get
+      Layers:
+        - !Ref DependenciesLayer
+
   DependenciesLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
