@@ -1,5 +1,6 @@
 import json
 import openai
+from anthropic import Anthropic
 
 
 import boto3
@@ -7,7 +8,7 @@ from botocore.exceptions import ClientError
 
 def get_secret():
 
-    secret_name = "openai_aip_key"
+    secret_name = "my-claude-api-key"
     region_name = "ap-northeast-1"
 
     # Create a Secrets Manager client
@@ -60,21 +61,26 @@ def lambda_handler(event, context):
     #     raise e
 
     secret = get_secret()
-    openai.api_key = secret["OpenaiApiKey"]
 
-    response = openai.chat.completions.create(
-        model="gpt-4o-mini",  # 使用するモデル
+
+    # API keyを設定
+    anthropic = Anthropic(api_key=secret["claude-api-key"])
+
+    # メッセージを送信
+    message = anthropic.messages.create(
+        max_tokens=1024,
+        model="claude-3-5-sonnet-20240620",
         messages=[
-        {"role": "system", "content": "あなたは小学校の先生です。"},
-        {"role": "user", "content": "量子コンピューターの仕組みを小学生にもわかるように200字以内で回答してください。"}
+            {
+                "role": "user", 
+                "content": "こんにちは、Claude。量子コンピューターの仕組みを小学生にもわかるように200字以内で回答してください。"
+            }
         ]
     )
-
-
 
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": response.choices[0].message.content
+            "message": message.content[0].text
         }, ensure_ascii=False),
     }
