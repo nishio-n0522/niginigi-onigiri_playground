@@ -1,13 +1,24 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Unstable_Grid2";
-import EachExperimentalResultCard from "./eachExperimentalResultCard";
+import EachExperimentalDataCard from "./eachExperimentalResultCard";
 import { useResponsive } from "@/hooks/use-responsive";
 import { desktopDrawerWidth, laptopDrawerWidth } from "./speechToText-config";
 
-export default function ExperimentalResultView() {
+import { Schema } from "@/amplify/data/resource";
+
+interface ExperimentalResultViewProps {
+  experimentData: Array<Schema["ExperimentalData"]["type"]>;
+}
+
+export default function ExperimentalResultView({
+  experimentData,
+}: ExperimentalResultViewProps) {
   const desktopUp = useResponsive("up", "desktop");
   const laptopUp = useResponsive("up", "laptop");
+
+  console.log("koresiritai", experimentData);
+
   return (
     <Box
       sx={{
@@ -27,9 +38,8 @@ export default function ExperimentalResultView() {
         columns={12}
         spacing={{ mobile: 2, laptop: 3 }}
         p={{ mobile: 2, desktop: 3 }}
-        // sx={{ overflow: "auto" }}
       >
-        {Array.from(Array(20)).map((_, index) => (
+        {experimentData.map((eachExperimentData, index) => (
           <Grid
             mobile={12}
             tablet={6}
@@ -39,7 +49,7 @@ export default function ExperimentalResultView() {
             display="flex"
             justifyContent="center"
           >
-            <EachExperimentalResultCard />
+            <EachExperimentalDataCard eachExperimentData={eachExperimentData} />
           </Grid>
         ))}
       </Grid>

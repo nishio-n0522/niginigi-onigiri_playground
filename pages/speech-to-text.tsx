@@ -1,14 +1,32 @@
+import * as React from "react";
+
+import type { Schema } from "../amplify/data/resource";
+import { generateClient } from "aws-amplify/api";
+
 import ExperimentalResultView from "@/components/speechToText/experimentalResultView";
-import LaptopUpDrawer from "@/components/speechToText/laptopUpDrawer";
-import TabletDownDrawer from "@/components/speechToText/tabletDownDrawer";
+import ExperimentControlDrawer from "@/components/speechToText/experimentControlDrawer";
 import { useResponsive } from "@/hooks/use-responsive";
 import { Add } from "@mui/icons-material";
 import { Fab, Stack } from "@mui/material";
-import { useState } from "react";
+
+const client = generateClient<Schema>({ authMode: "userPool" });
+// const client = generateClient<Schema>();
 
 function SpeechToText() {
   const laptopUp = useResponsive("up", "laptop");
-  const [openDrawer, setOpenDrawer] = useState(false);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+
+  const [experimentData, setExperimentData] = React.useState<
+    Array<Schema["ExperimentalData"]["type"]>
+  >([]);
+
+  React.useEffect(() => {
+    const sub = client.models.ExperimentalData.observeQuery().subscribe({
+      next: (data) => setExperimentData([...data.items]),
+      error: (error) => console.warn(error),
+    });
+    return () => sub.unsubscribe();
+  }, []);
 
   return (
     <Stack
@@ -23,7 +41,7 @@ function SpeechToText() {
         boxSizing: "border-box",
       }}
     >
-      <ExperimentalResultView />
+      <ExperimentalResultView experimentData={experimentData} />
       {!laptopUp && (
         <Fab
           color="secondary"
@@ -37,17 +55,10 @@ function SpeechToText() {
           <Add />
         </Fab>
       )}
-      <LaptopUpDrawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
-      {/* {laptopUp ? (
-      ) : (
-        <TabletDownDrawer
-          openDrawer={openDrawer}
-          setOpenDrawer={setOpenDrawer}
-        />
-      )} */}
-      {/* {laptopUp && <Box sx={{ width: 250, bgcolor: "blue" }}>drawer place</Box>} */}
-      {/* <Box sx={{ width: "100vw", bgcolor: "red" }}>
-      </Box> */}
+      <ExperimentControlDrawer
+        openDrawer={openDrawer}
+        setOpenDrawer={setOpenDrawer}
+      />
     </Stack>
   );
 }

@@ -1,35 +1,57 @@
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
 import Image from "next/image";
 
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { fetchAuthSession } from "aws-amplify/auth";
+
+import { Box, Button, Stack, Typography } from "@mui/material";
 
 import homeRabbitImg from "@/public/onigiriRabbitImg.png";
 import { grey } from "@mui/material/colors";
 
 import "@aws-amplify/ui-react/styles.css";
-
-// const client = generateClient<Schema>();
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function App() {
-  // const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [text, setText] = useState<string>("None");
 
-  // function listTodos() {
-  //   client.models.Todo.observeQuery().subscribe({
-  //     next: (data) => setTodos([...data.items]),
-  //   });
-  // }
+  const handleClick = () => {
+    const data = {
+      key1: "value1",
+      key2: "value2",
+    };
 
-  // useEffect(() => {
-  //   listTodos();
-  // }, []);
+    axios
+      .get("https://niginigi-onigiri.studio/api/test")
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => console.log("err", err));
 
-  // function createTodo() {
-  //   client.models.Todo.create({
-  //     content: window.prompt("Todo content"),
-  //   });
-  // }
+    // const callApi = (token: string) =>
+    //   axios
+    //     .post(
+    //       "https://h6nad1f1qi.execute-api.ap-northeast-1.amazonaws.com/testing/api/v1/create-summary",
+    //       data,
+    //       {
+    //         withCredentials: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       }
+    //     )
+    //     .then((response) => {
+    //       console.log(response);
+    //     })
+    //     .catch((err) => console.log("err", err));
+
+    // fetchAuthSession().then((res) => {
+    //   console.log("nanikore", res);
+    //   if (!res.tokens) return;
+    //   console.log(res.tokens.idToken?.toString());
+    //   callApi(res.tokens.accessToken.toString());
+    // });
+  };
 
   return (
     <Stack
@@ -70,6 +92,10 @@ export default function App() {
           This app is a playground for hobbyists to create and try out things in
           their spare time.
         </Typography>
+        <Button variant="contained" color="primary" onClick={handleClick}>
+          test button
+        </Button>
+        <Typography color="white">{text}</Typography>
       </Stack>
     </Stack>
   );
