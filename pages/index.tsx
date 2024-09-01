@@ -20,12 +20,18 @@ export default function App() {
       key2: "value2",
     };
 
-    axios
-      .get("https://niginigi-onigiri.studio/api/test")
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => console.log("err", err));
+    const callApi = (token: string) =>
+      axios
+        .get("https://api.niginigi-onigiri.studio/v1/test", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.log("err", err));
 
     // const callApi = (token: string) =>
     //   axios
@@ -45,12 +51,12 @@ export default function App() {
     //     })
     //     .catch((err) => console.log("err", err));
 
-    // fetchAuthSession().then((res) => {
-    //   console.log("nanikore", res);
-    //   if (!res.tokens) return;
-    //   console.log(res.tokens.idToken?.toString());
-    //   callApi(res.tokens.accessToken.toString());
-    // });
+    fetchAuthSession().then((res) => {
+      console.log("nanikore", res);
+      if (!res.tokens) return;
+      console.log(res.tokens.idToken?.toString());
+      callApi(res.tokens.accessToken.toString());
+    });
   };
 
   return (
