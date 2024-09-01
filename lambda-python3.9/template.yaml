@@ -37,12 +37,6 @@ Resources:
       Runtime: python3.9
       Architectures:
         - x86_64
-      Events:
-        GoodbyeWorld:
-          Type: Api
-          Properties:
-            Path: /goodbye
-            Method: get
       Layers:
         - !Ref DependenciesLayer
 
