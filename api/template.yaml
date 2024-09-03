@@ -1,0 +1,64 @@
+# reference
+# https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#domain-configuration-object
+
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: niginigi-onigiri playground backend
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+    Cors:
+      AllowOrigin: "'https://niginigi-onigiri.studio'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowMethods: "'*'"
+    # Domain:
+    #   DomainName: "api.niginigi-onigiri.stdio"
+    #   CertificateArn: "{{resolve:ssm:/niginigi-onigiri_api/certificate-arn}}"
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: python3.9
+    Architectures:
+      - x86_64
+
+Resources:
+  MainFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: "{{resolve:ssm:/niginigi-onigiri_api/lambda_role}}"
+      CodeUri: src/
+      Handler: main.lambda_handler
+      Events:
+        NiginigiOnigiriAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+      Layers:
+        - !Ref DependenciesLayer
+
+  DependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: dependencies-layer
+      Description: Dependencies for the sample app
+      ContentUri: dependencies/
+      CompatibleRuntimes:
+        - python3.9
+    Metadata:
+      BuildMethod: python3.9
+# Outputs:
+#   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+#   # Find out more about other implicit resources you can reference within SAM
+#   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+#   HelloWorldApi:
+#     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+#     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+#   HelloWorldFunction:
+#     Description: "Hello World Lambda Function ARN"
+#     Value: !GetAtt HelloWorldFunction.Arn
+#   HelloWorldFunctionIamRole:
+#     Description: "Implicit IAM Role created for Hello World function"
+#     Value: !GetAtt HelloWorldFunctionRole.Arn
