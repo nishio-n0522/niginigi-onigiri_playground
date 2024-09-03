@@ -20,42 +20,49 @@ export default function App() {
       key2: "value2",
     };
 
-    const callApi = (token: string) =>
+    // const callApi = (jwtToken: string) => {
+    //   axios
+    //     .get(
+    //       "https://g9t64p343c.execute-api.ap-northeast-1.amazonaws.com/dev/v1/test",
+    //       {
+    //         // .get("https://api.niginigi-onigiri.studio/v1/test", {
+    //           headers: {
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${jwtToken}`,
+    //           },
+    //           data: {}, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
+    //           withCredentials: true,
+    //         }
+    //       )
+    //       .then((response) => {
+    //         console.log(response);
+    //       })
+    //       .catch((err) => console.log("err", err));
+    //     };
+
+    const callApi = (jwtToken: string) =>
       axios
-        .get("https://api.niginigi-onigiri.studio/v1/test", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .post(
+          "https://g9t64p343c.execute-api.ap-northeast-1.amazonaws.com/dev/v1/test",
+          data,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        )
         .then((response) => {
           console.log(response);
         })
         .catch((err) => console.log("err", err));
 
-    // const callApi = (token: string) =>
-    //   axios
-    //     .post(
-    //       "https://h6nad1f1qi.execute-api.ap-northeast-1.amazonaws.com/testing/api/v1/create-summary",
-    //       data,
-    //       {
-    //         withCredentials: true,
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //           Authorization: `Bearer ${token}`,
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //       console.log(response);
-    //     })
-    //     .catch((err) => console.log("err", err));
-
     fetchAuthSession().then((res) => {
       console.log("nanikore", res);
-      if (!res.tokens) return;
-      console.log(res.tokens.idToken?.toString());
-      callApi(res.tokens.accessToken.toString());
+      if (!res.tokens || !res.tokens.idToken) return;
+      const jwtToken = res.tokens.idToken.toString();
+      callApi(jwtToken);
     });
   };
 
