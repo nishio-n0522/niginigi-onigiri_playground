@@ -1,0 +1,83 @@
+openapi: "3.0.3"
+info:
+  title: niginigi-onigiri playground API
+  version: "1.0"
+servers:
+  - url: https://api.server/v1
+paths:
+  /gen-ai:
+    get:
+      summary: Generative AI関連のリソース一覧
+      description: 使用可能なGenerative AI関連のリソースの一覧を返す
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+  /gen-ai/summary:
+    post:
+      summary: Generative AIによるプロンプトの要約
+      description: Generative AIを使って入力プロンプトのサマリーを作成し、返す
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                langage:
+                  type: string
+                  enum: ["ja", "en"]
+                prompt:
+                  type: string
+                model:
+                  type: string
+                  enum: ["gpt", "claude"]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summary:
+                    type: string
+  /gen-ai/filler-detection-and-removal:
+    post:
+      summary: Generative AIによるフィラー除去
+      description: Generative AIを使ってスピーチの文字起こし文からフィラーを除去して返す
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                langage:
+                  type: string
+                  enum: ["ja", "en"]
+                prompt:
+                  type: string
+                model:
+                  type: string
+                  enum: ["gpt", "claude"]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  original_text:
+                    type: string
+                  cleaned_text:
+                    type: string

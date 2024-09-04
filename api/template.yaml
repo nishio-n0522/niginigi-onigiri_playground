@@ -1,0 +1,80 @@
+# reference
+# https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#domain-configuration-object
+
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: niginigi-onigiri playground backend
+
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - prod
+      - dev
+
+Mappings:
+  EnvironmentConfig:
+    prod:
+      origin: "'https://niginigi-onigiri.studio'"
+    dev:
+      origin: "'http://localhost:3000'"
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: python3.9
+    Architectures:
+      - x86_64
+
+Resources:
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Stage
+      EndpointConfiguration:
+        Type: REGIONAL
+      OpenApiVersion: 3.0.3
+      Cors:
+        AllowOrigin: !FindInMap [EnvironmentConfig, !Ref Stage, origin]
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowMethods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+        AllowCredentials: true
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            # UserPoolArn: "{{resolve:ssm:/niginigi-onigiri_api/main_user_pool_arn}}" # For prod
+            UserPoolArn: "{{resolve:ssm:/niginigi-onigiri_api/local_dev_user_pool_arn}}" # For dev
+        AddDefaultAuthorizerToCorsPreflight: false
+      # Domain:
+      #   DomainName: "api.niginigi-onigiri.studio"
+      #   CertificateArn: "{{resolve:ssm:/niginigi-onigiri_api/certificate_arn}}"
+
+  MainFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: "{{resolve:ssm:/niginigi-onigiri_api/lambda_role}}"
+      CodeUri: src/
+      Handler: main.lambda_handler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /v1/{proxy+}
+            Method: ANY
+            RestApiId: !Ref MyApi
+      Layers:
+        - !Ref DependenciesLayer
+
+  DependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: dependencies-layer
+      Description: Dependencies for the sample app
+      ContentUri: dependencies/
+      CompatibleRuntimes:
+        - python3.9
+    Metadata:
+      BuildMethod: python3.9
