@@ -18,10 +18,11 @@ import {
 } from "@mui/material";
 import { desktopDrawerWidth, laptopDrawerWidth } from "./speechToText-config";
 import dayjs from "dayjs";
-import { getCurrentUser } from "aws-amplify/auth";
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 import { CloudUpload } from "@mui/icons-material";
 import { StorageManager } from "@aws-amplify/ui-react-storage";
 import { uploadData } from "aws-amplify/storage";
+import axios from "axios";
 
 interface ExperimentControlDrawerProps {
   openDrawer: boolean;
@@ -102,6 +103,38 @@ export default function ExperimentControlDrawer(
         console.warn(err);
       }
     };
+  };
+
+  const handleClick = () => {
+    const data = {
+      key1: "value1",
+      key2: "value2",
+    };
+
+    const callApi = (jwtToken: string) => {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_NIGINIGI_ONIGIRI_API_TEST_URL}/dev/v1/test`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwtToken}`,
+            },
+            data, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => console.log("err", err));
+    };
+
+    fetchAuthSession().then((res) => {
+      if (!res.tokens || !res.tokens.idToken) return;
+      const jwtToken = res.tokens.idToken.toString();
+      callApi(jwtToken);
+    });
   };
 
   // Drawerの開閉でフォームデータをリセット

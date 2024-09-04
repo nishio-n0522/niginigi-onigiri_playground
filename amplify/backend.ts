@@ -11,7 +11,6 @@ const backend = defineBackend({
 });
 
 const s3Bucket = backend.storage.resources.bucket;
-
 const cfnBucket = s3Bucket.node.defaultChild as s3.CfnBucket;
 
 cfnBucket.accelerateConfiguration = {
