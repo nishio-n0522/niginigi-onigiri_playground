@@ -68,6 +68,21 @@ Resources:
       Layers:
         - !Ref DependenciesLayer
 
+  AsyncProcessingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: "{{resolve:ssm:/niginigi-onigiri_api/lambda_role}}"
+      CodeUri: src/
+      Handler: async_processing.lambda_handler
+      Events:
+        SqsEvent:
+          Type: SQS
+          Properties:
+            Queue: "{{resolve:ssm:/niginigi-onigiri_api/async_sqs_arn}}"
+            BatchSize: 1
+      Layers:
+        - !Ref DependenciesLayer
+
   DependenciesLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
