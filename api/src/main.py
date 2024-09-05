@@ -12,6 +12,8 @@ REGION_NAME = "ap-northeast-1"
 OPENAI_SECRET_NAME = "openai-api-key"
 CLAUDE_SECRET_NAME = "claude-api-key"
 
+SQS_URL_KEY = "/niginigi-onigiri_api/async_sqs_url"
+
 def get_secret():
 
     # Create a Secrets Manager client
@@ -47,7 +49,7 @@ def lambda_handler(event, context):
     dedup_id = str(uuid.uuid4())
 
     sqs = boto3.client("sqs")
-    sqs_url = parameters.get_parameter("/niginigi-onigiri_api/async_sqs_url")
+    sqs_url = parameters.get_parameter(SQS_URL_KEY)
     response = sqs.send_message(QueueUrl=sqs_url, MessageBody="test1", MessageGroupId="test", MessageDeduplicationId=dedup_id)
     print("response", response)
 
