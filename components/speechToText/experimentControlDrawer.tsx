@@ -248,6 +248,14 @@ export default function ExperimentControlDrawer(
         >
           execute
         </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: "80%" }}
+          onClick={handleClick}
+        >
+          test
+        </Button>
       </Stack>
     </Drawer>
   );
