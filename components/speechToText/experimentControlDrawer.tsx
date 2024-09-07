@@ -120,8 +120,8 @@ export default function ExperimentControlDrawer(
               "Content-Type": "application/json",
               Authorization: `Bearer ${jwtToken}`,
             },
-            data, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
             withCredentials: true,
+            data, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
           }
         )
         .then((response) => {
