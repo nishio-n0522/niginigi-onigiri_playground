@@ -79,8 +79,8 @@ def test():
     response = openai.chat.completions.create(
         model="gpt-4o-mini",  # 使用するモデル
         messages=[
-        {"role": "system", "content": "あなたは小学校の先生です。"},
-        {"role": "user", "content": "生成AIの仕組みを小学生にもわかるように200字以内で回答してください。"}
+            {"role": "system", "content": "あなたは小学校の先生です。"},
+            {"role": "user", "content": "生成AIの仕組みを小学生にもわかるように200字以内で回答してください。"}
         ]
     )
     chat_result = response.choices[0].message.content

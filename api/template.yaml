@@ -24,7 +24,6 @@ Globals:
   Function:
     Timeout: 30
     MemorySize: 256
-    Runtime: python3.9
     Architectures:
       - x86_64
 
@@ -56,8 +55,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Role: "{{resolve:ssm:/niginigi-onigiri_api/lambda_role}}"
-      CodeUri: src/
-      Handler: main.lambda_handler
+      PackageType: Image
       Events:
         ApiEvent:
           Type: Api
@@ -65,31 +63,48 @@ Resources:
             Path: /v1/{proxy+}
             Method: ANY
             RestApiId: !Ref MyApi
-      Layers:
-        - !Ref DependenciesLayer
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./src/main
+      DockerTag: python3.9-v1
 
   AsyncProcessingFunction:
     Type: AWS::Serverless::Function
     Properties:
       Role: "{{resolve:ssm:/niginigi-onigiri_api/lambda_role}}"
-      CodeUri: src/
-      Handler: async_processing.lambda_handler
+      PackageType: Image
+      MemorySize: 1024
+      # MemorySize: 10240
       Events:
         SqsEvent:
           Type: SQS
           Properties:
             Queue: "{{resolve:ssm:/niginigi-onigiri_api/async_sqs_arn}}"
             BatchSize: 1
-      Layers:
-        - !Ref DependenciesLayer
-
-  DependenciesLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: dependencies-layer
-      Description: Dependencies for the sample app
-      ContentUri: dependencies/
-      CompatibleRuntimes:
-        - python3.9
     Metadata:
-      BuildMethod: python3.9
+      Dockerfile: Dockerfile
+      DockerContext: ./src/async_processing
+      DockerTag: python3.9-v1
+
+  TestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Role: "{{resolve:ssm:/niginigi-onigiri_api/lambda_role}}"
+      PackageType: Image
+      MemorySize: 1024
+      # MemorySize: 10240
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./src/test
+      DockerTag: python3.9-v1
+
+  # DependenciesLayer:
+  #   Type: AWS::Serverless::LayerVersion
+  #   Properties:
+  #     LayerName: dependencies-layer
+  #     Description: Dependencies for the sample app
+  #     ContentUri: dependencies/
+  #     CompatibleRuntimes:
+  #       - python3.9
+  #   Metadata:
+  #     BuildMethod: python3.9
