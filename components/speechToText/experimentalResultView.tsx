@@ -17,8 +17,6 @@ export default function ExperimentalResultView({
   const desktopUp = useResponsive("up", "desktop");
   const laptopUp = useResponsive("up", "laptop");
 
-  console.log("koresiritai", experimentData);
-
   return (
     <Box
       sx={{

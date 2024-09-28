@@ -2,7 +2,7 @@
   "body": "{\"message\": \"hello world\"}",
   "resource": "/test",
   "path": "/test",
-  "httpMethod": "GET",
+  "httpMethod": "POST",
   "isBase64Encoded": false,
   "queryStringParameters": {
     "foo": "bar"
@@ -31,7 +31,8 @@
     "X-Amz-Cf-Id": "cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==",
     "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
     "X-Forwarded-Port": "443",
-    "X-Forwarded-Proto": "https"
+    "X-Forwarded-Proto": "https",
+    "Content-Type": "application/json"
   },
   "requestContext": {
     "accountId": "123456789012",

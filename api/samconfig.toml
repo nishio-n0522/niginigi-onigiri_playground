@@ -21,7 +21,8 @@ stack_name = "niginigi-onigiri-api-lambda"
 s3_prefix = "niginigi-onigiri-api-lambda"
 region = "ap-northeast-1"
 disable_rollback = true
-image_repositories = []
+image_repositories = ["MainFunction=767397854111.dkr.ecr.ap-northeast-1.amazonaws.com/niginigionigiriapilambdab6eb9772/mainfunctiond66060d3repo", "AsyncProcessingFunction=767397854111.dkr.ecr.ap-northeast-1.amazonaws.com/niginigionigiriapilambdab6eb9772/asyncprocessingfunction9a6935ecrepo", "TestFunction=767397854111.dkr.ecr.ap-northeast-1.amazonaws.com/niginigionigiriapilambdab6eb9772/testfunction216b9a98repo"]
+parameter_overrides = "Stage=\"dev\""
 
 [default.package.parameters]
 resolve_s3 = true

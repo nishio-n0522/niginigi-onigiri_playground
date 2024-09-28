@@ -10,10 +10,16 @@ import {
   Button,
   Checkbox,
   Divider,
+  FormControl,
   FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
   Stack,
   styled,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import { desktopDrawerWidth, laptopDrawerWidth } from "./speechToText-config";
@@ -55,10 +61,21 @@ export default function ExperimentControlDrawer(
   const [uploadFile, setUploadFile] = React.useState<File | null>(null);
   const [disableExecButton, setDisableExecButton] =
     React.useState<boolean>(true);
+  const [genAiModel, setGenAiModel] = React.useState<"gpt" | "claude">("gpt");
+  const [language, setLanguage] = React.useState("ja");
+
+  const handleChangeGenAiModel = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setGenAiModel(event.target.value as "gpt" | "claude");
+  };
+
+  const handleChangeLanguage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLanguage(event.target.value as "ja" | "en");
+  };
 
   const handleUploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log(event.target.files);
     if (file) setUploadFile(file);
   };
 
@@ -78,18 +95,23 @@ export default function ExperimentControlDrawer(
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(uploadFile);
 
+    let filePath: string;
     fileReader.onload = async (event) => {
       if (!event.target || !event.target.result) return;
+
       try {
-        await uploadData({
+        const uploadTask = await uploadData({
           data: event.target.result,
           path: ({ identityId }) =>
             `speech-to-text/${identityId}/${s3FileName}`,
         });
+
+        filePath = (await uploadTask.result.then((res) => res.path)).toString();
       } catch (err) {
         console.warn(err);
         return;
       }
+
       try {
         await client.models.ExperimentalData.create({
           owner: userId,
@@ -101,40 +123,40 @@ export default function ExperimentControlDrawer(
         });
       } catch (err) {
         console.warn(err);
+        return;
       }
-    };
-  };
 
-  const handleClick = () => {
-    const data = {
-      key1: "value1",
-      key2: "value2",
-    };
+      const requestBody = {
+        userId,
+        experimentName,
+        filePath,
+        outputLanguage: language,
+        genAiModel,
+      };
 
-    const callApi = (jwtToken: string) => {
-      axios
-        .get(
-          `${process.env.NEXT_PUBLIC_NIGINIGI_ONIGIRI_API_TEST_URL}/dev/v1/test`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwtToken}`,
-            },
-            data, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((err) => console.log("err", err));
-    };
+      console.log("requestBody", requestBody);
 
-    fetchAuthSession().then((res) => {
-      if (!res.tokens || !res.tokens.idToken) return;
-      const jwtToken = res.tokens.idToken.toString();
-      callApi(jwtToken);
-    });
+      // fetchAuthSession()
+      //   .then((res) => {
+      //     if (!res.tokens || !res.tokens.idToken) return;
+      //     const jwtToken = res.tokens.idToken.toString();
+      //     return axios.post(
+      //       `${process.env.NEXT_PUBLIC_NIGINIGI_ONIGIRI_API_TEST_URL}/dev/v1/gen-ai/speech-to-text`,
+      //       requestBody, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
+      //       {
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //           Authorization: `Bearer ${jwtToken}`,
+      //         },
+      //         withCredentials: true,
+      //       }
+      //     );
+      //   })
+      //   .then((res) => {
+      //     console.log(res);
+      //   })
+      //   .catch((err) => console.log("err", err));
+    };
   };
 
   // Drawerの開閉でフォームデータをリセット
@@ -219,6 +241,50 @@ export default function ExperimentControlDrawer(
             File: {!!uploadFile && uploadFile.name}
           </Typography>
         </Stack>
+        <Box sx={{ py: 0, my: 0, width: "80%" }}>
+          <FormControl>
+            <FormLabel>Output language</FormLabel>
+            <RadioGroup
+              row
+              name="row-radio-buttons-group"
+              value={language}
+              onChange={handleChangeLanguage}
+            >
+              <FormControlLabel
+                value="ja"
+                control={<Radio />}
+                label="Japanese"
+              />
+              <FormControlLabel
+                value="en"
+                control={<Radio />}
+                label="English"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Box>
+        <Box sx={{ py: 0, my: 0, width: "80%" }}>
+          <FormControl>
+            <FormLabel>Generative AI model</FormLabel>
+            <RadioGroup
+              row
+              name="row-radio-buttons-group"
+              value={genAiModel}
+              onChange={handleChangeGenAiModel}
+            >
+              <FormControlLabel
+                value="gpt"
+                control={<Radio />}
+                label="GPT-4o"
+              />
+              <FormControlLabel
+                value="claude"
+                control={<Radio />}
+                label="chaude3.5 sonnet"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Box>
         <Divider sx={{ width: "80%" }} />
         <Box sx={{ width: "80%" }}>
           <Typography variant="body2">
@@ -247,14 +313,6 @@ export default function ExperimentControlDrawer(
           onClick={execSpeechToTextExperiment}
         >
           execute
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ width: "80%" }}
-          onClick={handleClick}
-        >
-          test
         </Button>
       </Stack>
     </Drawer>
