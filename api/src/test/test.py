@@ -26,10 +26,16 @@ client = boto3.client("s3")
 #     audio.export("audio_truck/output/"+ target_path.stem + ".wav", format="wav")
 
 def download_file(key, download_path):
+    """download from s3 bucket
+
+    Args:
+        key (str): _description_
+        download_path (_type_): _description_
+    """
     client.download_file(Bucket=TEST_BUCKET, Key=key, Filename=download_path)
 
 def upload_file(file_path, key):
-    client.put_object(Filename=file_path, Bucket=TEST_BUCKET, Key=key)
+    client.put_object(file_path, TEST_BUCKET, key)
 
 def convert_m4a_to_wav(input_path, output_path):
     subprocess.call(['ffmpeg', '-i', input_path, output_path])
@@ -39,24 +45,20 @@ def lambda_handler(event, context):
     logger.info("current directory: ", os.getcwd())
 
     target_file_key = "test_folder/sample_speech.m4a"
-    tmp_input = f"/tmp/{str(uuid.uuid4())}.m4a"
+    tmp_input = f"./tmp/{str(uuid.uuid4())}.m4a"
     tmp_output = f"/tmp/{str(uuid.uuid4())}.wav"
 
     try:
-        print("ダウンロードの実行")
         download_file(target_file_key, tmp_input)
-        print("ダウンロードの完了", "ファイル形式の変換の開始")
-        convert_m4a_to_wav(tmp_input, tmp_output)
-        print("ファイル形式変換の完了", "ファイルアップロードの開始")
+        # convert_m4a_to_wav(tmp_input, tmp_output)
         upload_file(tmp_output, "test_folder/sample_speech.wav")
-        print("アップロードの完了")
 
         return {
             'statusCode': 200,
             'body': json.dumps('Audio conversion successful')
         }
     except Exception as e:
-        print("エラーの発生", e)
+        print(e)
         return {
             'statusCode': 500,
             'body': json.dumps('Error in audio conversion')
@@ -67,3 +69,10 @@ def lambda_handler(event, context):
             os.remove(tmp_input)
         if os.path.exists(tmp_output):
             os.remove(tmp_output)
+
+# if __name__=='__main__':
+#     target_file_key = "test_folder/sample_speech.m4a"
+#     tmp_input = f"./tmp/{str(uuid.uuid4())}.m4a"
+#     tmp_output = f"/tmp/{str(uuid.uuid4())}.wav"
+#     print("path to downloaded file", tmp_input)
+#     download_file(target_file_key, tmp_input)
