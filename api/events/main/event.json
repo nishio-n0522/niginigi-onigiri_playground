@@ -1,7 +1,7 @@
 {
   "body": "{\"message\": \"hello world\"}",
-  "resource": "/test",
-  "path": "/test",
+  "resource": "/gen-ai/speech-to-text",
+  "path": "/gen-ai/speech-to-text",
   "httpMethod": "POST",
   "isBase64Encoded": false,
   "queryStringParameters": {

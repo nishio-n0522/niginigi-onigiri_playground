@@ -68,7 +68,7 @@ Resources:
       DockerContext: ./src/main
       DockerTag: python3.9-v1
 
-  AsyncProcessingFunction:
+  AsyncSpeechToText:
     Type: AWS::Serverless::Function
     Properties:
       Role: "{{resolve:ssm:/niginigi-onigiri_api/lambda_role}}"
@@ -83,7 +83,7 @@ Resources:
             BatchSize: 1
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./src/async_processing
+      DockerContext: ./src/speech_to_text
       DockerTag: python3.9-v1
 
   TestFunction:

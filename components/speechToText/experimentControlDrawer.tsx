@@ -136,26 +136,26 @@ export default function ExperimentControlDrawer(
 
       console.log("requestBody", requestBody);
 
-      // fetchAuthSession()
-      //   .then((res) => {
-      //     if (!res.tokens || !res.tokens.idToken) return;
-      //     const jwtToken = res.tokens.idToken.toString();
-      //     return axios.post(
-      //       `${process.env.NEXT_PUBLIC_NIGINIGI_ONIGIRI_API_TEST_URL}/dev/v1/gen-ai/speech-to-text`,
-      //       requestBody, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
-      //       {
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //           Authorization: `Bearer ${jwtToken}`,
-      //         },
-      //         withCredentials: true,
-      //       }
-      //     );
-      //   })
-      //   .then((res) => {
-      //     console.log(res);
-      //   })
-      //   .catch((err) => console.log("err", err));
+      fetchAuthSession()
+        .then((res) => {
+          if (!res.tokens || !res.tokens.idToken) return;
+          const jwtToken = res.tokens.idToken.toString();
+          return axios.post(
+            `${process.env.NEXT_PUBLIC_NIGINIGI_ONIGIRI_API_TEST_URL}/v1/gen-ai/speech-to-text`,
+            requestBody, // axiosで送信データがないとき、headerのcontent-typeが送信されないという仕様があるため
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwtToken}`,
+              },
+              withCredentials: true,
+            }
+          );
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => console.log("err", err));
     };
   };
 
@@ -169,9 +169,9 @@ export default function ExperimentControlDrawer(
 
   // Executeボタンの有効化チェック
   React.useEffect(() => {
-    if (!experimentName) return setDisableExecButton(true);
-    if (!uploadFile) return setDisableExecButton(true);
-    if (!confirm) return setDisableExecButton(true);
+    // if (!experimentName) return setDisableExecButton(true);
+    // if (!uploadFile) return setDisableExecButton(true);
+    // if (!confirm) return setDisableExecButton(true);
     setDisableExecButton(false);
   }, [experimentName, uploadFile, confirm]);
 
@@ -286,7 +286,7 @@ export default function ExperimentControlDrawer(
           </FormControl>
         </Box>
         <Divider sx={{ width: "80%" }} />
-        <Box sx={{ width: "80%" }}>
+        {/* <Box sx={{ width: "80%" }}>
           <Typography variant="body2">
             機密情報が含まれるデータは絶対に入力しないでください
           </Typography>
@@ -304,7 +304,7 @@ export default function ExperimentControlDrawer(
               verticalAlign: "bottom",
             }}
           />
-        </Box>
+        </Box> */}{" "}
         <Button
           variant="contained"
           color="primary"

@@ -43,3 +43,5 @@ amplifyconfiguration*
 # app design
 design
 api/.aws-sam/
+api/events/main/event_with_risk.json
+api/samconfig.toml

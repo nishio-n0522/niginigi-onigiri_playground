@@ -1,0 +1,23 @@
+{
+  "Records": [
+    {
+      "messageId": "28deb285-e9f8-40a4-8a67-f4aa685928ba",
+      "receiptHandle": "AQEBlwoeKIG46sqYZjS5KpQ6Pwe4O2e84koBF9Blg1SKgVG7nC5l76DjdheeUyGWz1I1eUi+It7TgcllLXj/GrcTb9f4qI5zmydRke+dWZnlq49Ng7JKIb54YIZLKICFYmDvBAVVocc3YETMdR7f2W9WrsNdH25kxVMR0tdElWsLRcUcQ/1aydez71RC06nwCrBIwzbfcLsGdIxfrPwmhOQdLVkEUZzG1CQYHUw7WRwOOw7KBaQVjYDpGwpHH/wCp2HOm2lTQt0hXdmjcq40CM01PksWthr/STl0/YbCtcdQW60tABUxm1cIBWQ04vOEsqeAGCGdGvN6vqnYiIw8KtdDeQ==",
+      "body": "{\"data1\": \"test1\", \"data2\": 123, \"data3\": true, \"data4\": [\"aaa\", \"bbb\"], \"data5\": {\"data1\": 133}}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1736841678245",
+        "SequenceNumber": "18891375543340271616",
+        "MessageGroupId": "test",
+        "SenderId": "AIDA3FLDZ7OPXPMCI74H7",
+        "MessageDeduplicationId": "1f68cc14-69b4-4e50-b772-849de0412274",
+        "ApproximateFirstReceiveTimestamp": "1736841678245"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "976da26f320b9a0687f9b7f6eb816637",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:ap-northeast-1:767397854111:niginigi-onigiri_speech-to-text_queue.fifo",
+      "awsRegion": "ap-northeast-1"
+    }
+  ]
+}

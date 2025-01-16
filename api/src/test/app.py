@@ -28,8 +28,8 @@ client = boto3.client("s3")
 def download_file(key, download_path):
     client.download_file(Bucket=TEST_BUCKET, Key=key, Filename=download_path)
 
-def upload_file(file_path, key):
-    client.put_object(Filename=file_path, Bucket=TEST_BUCKET, Key=key)
+def upload_file(file, key):
+    client.put_object(Body=file, Bucket=TEST_BUCKET, Key=key)
 
 def convert_m4a_to_wav(input_path, output_path):
     subprocess.call(['ffmpeg', '-i', input_path, output_path])
