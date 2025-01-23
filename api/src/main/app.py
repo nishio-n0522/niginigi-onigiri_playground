@@ -57,13 +57,13 @@ def get_gen_ai_resources():
 @app.post("/gen-ai/speech-to-text")
 def speech_to_text():
 
-    print(app.current_event.json_body)
+    print(app.current_event.json_body, type(app.current_event.json_body))
     
     # send message
     dedup_id = str(uuid.uuid4())
     sqs = boto3.client("sqs")
     sqs_url = parameters.get_parameter(SQS_URL_KEY)
-    response = sqs.send_message(QueueUrl=sqs_url, MessageBody=json.dumps({"data1": "test1", "data2": 123, "data3": True, "data4": ["aaa", "bbb"], "data5": {"data1": 133}}), MessageGroupId="test", MessageDeduplicationId=dedup_id)
+    response = sqs.send_message(QueueUrl=sqs_url, MessageBody=json.dumps(app.current_event.json_body), MessageGroupId="test", MessageDeduplicationId=dedup_id)
     # print("response", response)
 
     return {"result": "your order is processing at background."}
