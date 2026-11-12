@@ -40,7 +40,7 @@ const pacifico = Pacifico({
 const customTheme = createTheme({
   palette: {
     primary: {
-      main: "#009688",
+      main: "#00afa8",
       light: "#B2DFDB",
       dark: "#00796B",
       contrastText: "#FFFFFF",

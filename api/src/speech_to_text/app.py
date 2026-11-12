@@ -39,6 +39,7 @@ def get_secret():
 # 5. 要約結果をs3もしくはdynamodbに保存する
 
 client_s3 = boto3.client("s3")
+client_dynamodb = boto3.client('dynamodb')
 
 
 client_openai = OpenAI(api_key = get_secret()[OPENAI_SECRET_NAME])
@@ -69,10 +70,42 @@ def speech_to_text(record):
         model="whisper-1",
         file=audio_file
     )
-    print(transcription.text)
 
     # TODO
     # 4. transcription結果を、gpt-4o-miniで要約する
+    response = client_openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "user", "content": f"次の会話内容からフィラーを除去しつつ、全ての会話内容を日本語訳してください。【会話】\n{transcription.text}"}
+        ]
+    )
+    full_text_translation = response.choices[0].message.content
+    response = client_openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "user", "content": f"次の会話内容を要約してください。【会話】\n{full_text_translation}"}
+        ]
+    )
+    summary = response.choices[0].message.content
+
+    # 5. 要約結果をs3もしくはdynamodbに保存する
+    table_name = parameters.get_parameter(DYNAMODB_EXPERIMENTTABLE_NAME)
+
+    print("full_text_translation", full_text_translation)
+    print("summary", summary)
+
+    # update
+    response = client_dynamodb.update_item(
+        TableName=table_name,
+        Key={"owner": {"S": "d794ba08-90c1-70e8-f52a-224d200086c7"}, "experimentName": {"S": "test"}},
+        ExpressionAttributeNames={
+            "#s": "status"
+        },
+        ExpressionAttributeValues={
+            ":newStatus": {"S": "Processing"}
+        },
+        UpdateExpression="SET #s = :newStatus"
+    )
     
     
 
@@ -90,22 +123,3 @@ def lambda_handler(event, context):
             speech_to_text(record)
         except Exception as e:
             logger.error(e)
-
-        
-
-    # table_name = parameters.get_parameter(DYNAMODB_EXPERIMENTTABLE_NAME)
-
-    # client = boto3.client('dynamodb')
-
-    # # update
-    # response = client.update_item(
-    #     TableName=table_name,
-    #     Key={"owner": {"S": "d794ba08-90c1-70e8-f52a-224d200086c7"}, "experimentName": {"S": "test"}},
-    #     ExpressionAttributeNames={
-    #         "#s": "status"
-    #     },
-    #     ExpressionAttributeValues={
-    #         ":newStatus": {"S": "Processing"}
-    #     },
-    #     UpdateExpression="SET #s = :newStatus"
-    # )

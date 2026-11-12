@@ -44,4 +44,6 @@ amplifyconfiguration*
 design
 api/.aws-sam/
 api/events/main/event_with_risk.json
+api/events/speech_to_text/event_with_risk.json
 api/samconfig.toml
+api/dependencies/speech_to_text

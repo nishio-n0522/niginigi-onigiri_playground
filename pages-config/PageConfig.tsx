@@ -1,4 +1,4 @@
-import { Home } from "@mui/icons-material";
+import { Home, Task } from "@mui/icons-material";
 import { SpeechToTextIcon } from "../assets/SpeechToTextIcon";
 import { Url } from "next/dist/shared/lib/router/router";
 
@@ -21,5 +21,11 @@ export const pageConfig: Array<EachPageType> = [
     description: "音声をテキストにする機能",
     to: "/speech-to-text",
     icon: <SpeechToTextIcon />,
+  },
+  {
+    pageName: "task-manager",
+    description: "ぼくの考えた最強のタスク管理",
+    to: "/task-manager",
+    icon: <Task />,
   },
 ];
